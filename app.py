@@ -1,5 +1,6 @@
 from flask import Flask
 
+# Actividad 5: verificacion del despliegue continuo con Render.
 app = Flask(__name__)
 
 

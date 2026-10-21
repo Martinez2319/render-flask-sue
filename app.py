@@ -1,12 +1,11 @@
 from flask import Flask
 
-# Actividad 5: verificacion del despliegue continuo con Render.
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.get("/")
 def home():
-    return "API funcionando en Render"
+    return "API funcionando en Railway"
 
 
 if __name__ == "__main__":

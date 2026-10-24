@@ -1,40 +1,20 @@
-# Flask en Render
+# U2 Actividad 7 Proyecto Deploy con Docker
 
-U2 · Actividad 5: práctica de despliegue continuo de una aplicación Flask en Render.
+Aplicación Flask empaquetada en una imagen Docker con Gunicorn.
 
-## Ejecutar localmente
-
-Con Python 3, desde la carpeta del proyecto:
+## Construir y desplegar
 
 ```sh
-python -m venv .venv
+docker build -t actividad7:1 .
+docker run -d --name actividad7 -p 127.0.0.1:8080:8080 actividad7:1
+curl http://127.0.0.1:8080/
+curl http://127.0.0.1:8080/health
 ```
 
-Activa el entorno con `.venv\Scripts\Activate.ps1` en PowerShell o `source .venv/bin/activate` en macOS/Linux. Después:
+La ruta `/` responde `API funcionando con Docker`. La ruta `/health` devuelve `{"status":"ok"}`.
 
-```sh
-python -m pip install -r requirements.txt
-python app.py
-```
+## Pipeline
 
-Abre http://127.0.0.1:5000. La ruta `GET /` responde **API funcionando en Render**.
+El workflow `.github/workflows/docker.yml` construye la imagen, ejecuta un contenedor temporal, comprueba sus rutas HTTP y muestra sus logs. Se activa con cada push a `actividad-7-docker`.
 
-## Despliegue
-
-[render.yaml](render.yaml) describe un servicio web de Python:
-
-- Instalación: `pip install -r requirements.txt`.
-- Arranque: `gunicorn app:app`.
-- Disparador de despliegue automático: `commit`.
-
-Conecta el repositorio a Render y revisa los registros de cada despliegue para comprobar su resultado. La configuración del repositorio no acredita por sí sola que exista un servicio publicado.
-
-## Archivos
-
-- [app.py](app.py): aplicación y ruta principal.
-- [requirements.txt](requirements.txt): Flask y Gunicorn.
-- [render.yaml](render.yaml): definición del servicio.
-
-## Qué practico
-
-Aplicaciones web mínimas, control de versiones y despliegue continuo.
+Esta verificación usa un contenedor temporal en GitHub Actions. La configuración del workflow por sí sola no acredita que su ejecución haya terminado correctamente.

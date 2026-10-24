@@ -1,13 +1,19 @@
+import os
+
 from flask import Flask
 
-# Actividad 5: verificacion del despliegue continuo con Render.
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.get("/")
 def home():
-    return "API funcionando en Render"
+    return "API funcionando con Docker"
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "8080")))

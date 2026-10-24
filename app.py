@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.get("/")
 def home():
-    return "API funcionando con Docker"
+    return "API funcionando con Docker - CD verificado"
 
 
 @app.get("/health")

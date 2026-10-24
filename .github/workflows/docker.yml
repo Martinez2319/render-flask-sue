@@ -21,7 +21,7 @@ jobs:
       - name: Verificar salud y respuesta HTTP
         shell: bash
         run: |
-          curl --fail --silent --show-error --retry 12 --retry-connrefused --retry-delay 2 http://127.0.0.1:8080/health
+          curl --fail --silent --show-error --retry 15 --retry-all-errors --retry-delay 2 --max-time 5 http://127.0.0.1:8080/health
           response=$(curl --fail --silent --show-error http://127.0.0.1:8080/)
           printf "%s\n" "$response"
           [[ "$response" == *"Docker"* ]]

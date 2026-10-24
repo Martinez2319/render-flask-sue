@@ -1,0 +1,35 @@
+name: Docker build and smoke test
+
+on:
+  push:
+    branches: [actividad-7-docker]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@v4
+      - name: Construir imagen Docker
+        run: docker build --tag actividad7:${{ github.sha }} .
+      - name: Desplegar contenedor de prueba
+        run: docker run --detach --name actividad7 --publish 127.0.0.1:8080:8080 actividad7:${{ github.sha }}
+      - name: Verificar salud y respuesta HTTP
+        shell: bash
+        run: |
+          curl --fail --silent --show-error --retry 12 --retry-connrefused --retry-delay 2 http://127.0.0.1:8080/health
+          response=$(curl --fail --silent --show-error http://127.0.0.1:8080/)
+          printf "%s\n" "$response"
+          [[ "$response" == *"Docker"* ]]
+      - name: Mostrar contenedor y logs
+        if: always()
+        run: |
+          docker ps -a --filter name=actividad7
+          docker logs actividad7 || true
+      - name: Retirar contenedor de prueba
+        if: always()
+        run: docker rm --force actividad7 || true
